@@ -70,17 +70,38 @@ class MessageController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             // send message 
-            $bot_api_key  = '1769404403:AAHMh5mrymiOC_THx5x2YdXXcx5RGFLz3EU';
+            $base_url = 'https://api.telegram.org/bot';
+            $bot_api_key  = '1611090732:AAHGrEEg9xjaR_Uqlt3-nRf80yVKkFKohy0';
+            $method = 'getUpdates';
 
-            $telegram = new Api( $bot_api_key );
+            $url = $base_url . $bot_api_key . '/' . $method;
 
-            $subscribers = \app\models\Subscriber::find()->all();
-            foreach( $subscribers as $subscriber ) {
-                $response = $telegram->sendMessage([
-                    'chat_id' => $subscriber->user_id,
-                    'text'    => $model->text,
-                ]);
+            $update = json_decode(
+                file_get_contents( $url ),
+                JSON_OBJECT_AS_ARRAY
+            );
+
+            $ids = [];
+
+            foreach( $update['result'] as $item ) {
+                $ids[] = $item['message']['chat']['id'];
             }
+            $ids = array_unique( $ids, SORT_NUMERIC );
+            
+            $method = 'sendMessage';
+
+            foreach( $ids as $id ) {
+                $params = http_build_query([
+                    'chat_id' => $id,
+                    'text' => $model->text,
+                ]);
+                $url = $base_url . $bot_api_key . '/' . $method . '?' . $params;
+                $update = json_decode(
+                    file_get_contents( $url ),
+                    JSON_OBJECT_AS_ARRAY
+                );
+            }
+    
             
             // end send
             return $this->redirect(['view', 'id' => $model->id]);
