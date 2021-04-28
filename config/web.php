@@ -52,7 +52,6 @@ $config = [
             'rules' => [
                 'message'        => 'message/index',
                 'message/create' => 'message/create',
-                'bot'            => 'bot/index',
             ],
         ],
     ],
