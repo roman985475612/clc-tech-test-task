@@ -13,6 +13,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <p class="lead">
+        Подпишитесь на телеграм-бот <a href="https://t.me/test_2021_04_28_bot">@test_2021_04_28_bot</a> и отправляйте сообщения!
+    </p>
+
     <p>
         <?= Html::a('Create Message', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
